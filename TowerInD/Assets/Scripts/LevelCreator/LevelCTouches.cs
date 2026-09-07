@@ -8,12 +8,13 @@ public partial class LevelC
 {
     public bool selection;
     public int tileSelection;
-    public TileC currentTile;
+    [System.NonSerialized] public TileC currentTile;
     
     public Camera mainCamera;
 
     private Coroutine runningClick;
 
+    // Place Tile Routine
     public IEnumerator ClickTile()
     {
         Debug.Log($"Starting Clicks");
@@ -34,6 +35,7 @@ public partial class LevelC
                 /*if (groundMap[gridPosition.x, gridPosition.y].type == (int)TileType.PATH)
                     continue;*/
 
+                // Set the tile to the current tiletype and save to the 2D array
                 groundTilemap.SetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0), tiles[currentTile.type]);
                 groundMap[gridPosition.x, gridPosition.y] = currentTile;
 
@@ -43,6 +45,7 @@ public partial class LevelC
         }
     }
 
+    // Select the tile to place.
     public void SelectTile(int i)
     {
         if (i == tileSelection)
@@ -54,6 +57,7 @@ public partial class LevelC
             return;
         }
 
+        // set the tile properties
         TileC temptile = new TileC();
         switch (i)
         {

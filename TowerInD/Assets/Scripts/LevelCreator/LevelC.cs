@@ -11,12 +11,12 @@ public partial class LevelC : MonoBehaviour
     public Tilemap groundTilemap;   //Base Level Ground Tilemap
 
     public List<AutoTile> tiles;    //List Of Tiles, Use Enum TileType
-    
 
-    public TileC start;             //Starting Tile AT EDGE
-    public TileC last;              //Ending Tile AT EDGE
 
-    public TileC[,] groundMap;     //2D Array Containing The Tiles
+    [System.NonSerialized] public TileC start;             //Starting Tile AT EDGE
+    [System.NonSerialized] public TileC last;              //Ending Tile AT EDGE
+
+    [System.NonSerialized] public TileC[,] groundMap;     //2D Array Containing The Tiles
 
     void Start()
     {
