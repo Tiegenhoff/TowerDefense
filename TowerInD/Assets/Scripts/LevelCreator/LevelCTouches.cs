@@ -42,7 +42,7 @@ public partial class LevelC
 
                 Debug.Log($"Grid position: {gridPosition}");
 
-                if (gridPosition.x > groundMap.GetLength(0) || gridPosition.y > groundMap.GetLength(1) || gridPosition.x < 0 || gridPosition.y < 0)
+                if (gridPosition.x >= groundMap.GetLength(0) || gridPosition.y >= groundMap.GetLength(1) || gridPosition.x < 0 || gridPosition.y < 0)
                 {
                     Debug.Log($"[!!!] Outside of 2D Array, Skipped");
                     yield return null;
@@ -72,7 +72,7 @@ public partial class LevelC
                         continue;
                     }
 
-                    // Set the tile to the current tiletype
+                    /*// Set the tile to the current tiletype
                     groundTilemap.SetTile(gridPosition, tiles[currentTile.type]);
 
                     // Record world position for PATH
@@ -85,7 +85,38 @@ public partial class LevelC
                         groundMap[previousPath.x, previousPath.y].next = currentTile;
                     else
                         start = currentTile;
+                    previousPath = gridPosition;*/
+                    
+                    //!
+
+                    // Set the visual tile
+                    groundTilemap.SetTile(gridPosition, tiles[currentTile.type]);
+
+                    // Create a separate TileC object for this placed tile
+                    TileC placedTile = new TileC();
+
+                    placedTile.type = currentTile.type;
+                    placedTile.placeable = currentTile.placeable;
+                    placedTile.position = groundTilemap.GetCellCenterWorld(gridPosition);
+
+                    // Save the new tile in the array
+                    groundMap[gridPosition.x, gridPosition.y] = placedTile;
+
+                    // Connect the previous path tile to this one
+                    if (previousTile != null)
+                    {
+                        previousTile.next = placedTile;
+                    }
+                    else
+                    {
+                        start = placedTile;
+                    }
+
+                    // This tile becomes the previous path tile
+                    previousTile = placedTile;
                     previousPath = gridPosition;
+
+                    //!
 
                     // Allow End
                     if (gridPosition.x == size - 1)
@@ -188,9 +219,62 @@ public partial class LevelC
             Destroy(currentEndPathButton);
         selection = false;
 
-        last = currentTile;
+        last = previousTile;
 
         // testing purposes
+        StartCoroutine(TestDrive());
+    }
 
+    public GameObject testPrefab;
+    private GameObject testObj;
+    public IEnumerator TestDrive()
+    {
+        bool moving = true;
+
+        TileC currentAim = start;
+        testObj = Instantiate(testPrefab);
+
+        testObj.transform.position = currentAim.position + new Vector3(0, 0, -1);
+        currentAim = currentAim.next;
+
+        while (moving)
+        {
+            // move it
+            Debug.Log($"One Round Of Moving");
+            yield return LerpPosition(testObj.transform, testObj.transform.position, currentAim.position + new Vector3(0, 0, -1), .25f);
+            
+            if (currentAim == last)
+                moving = false;
+            else
+                currentAim = currentAim.next;
+
+            yield return null;
+        }
+    }
+
+    // temporary lerp
+    private IEnumerator LerpPosition(
+    Transform target,
+    Vector3 startPosition,
+    Vector3 endPosition,
+    float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;
+
+            target.position = Vector3.Lerp(
+                startPosition,
+                endPosition,
+                t
+            );
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        target.position = endPosition;
     }
 }

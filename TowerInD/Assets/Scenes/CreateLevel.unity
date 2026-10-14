@@ -2468,6 +2468,7 @@ MonoBehaviour:
   endPathButtonPrefab: {fileID: 169390024685589938, guid: d63c6edbd4af4ec4f8e5816a293a7563, type: 3}
   sideBar: {fileID: 1654709798}
   mainCamera: {fileID: 519420031}
+  testPrefab: {fileID: 3901886975225173863, guid: e5cea860437ab49479bd10b8132305a2, type: 3}
 --- !u!4 &1032272648
 Transform:
   m_ObjectHideFlags: 0
