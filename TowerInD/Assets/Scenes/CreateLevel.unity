@@ -2464,6 +2464,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5d02ac12b396a7d4895a4967b031f6b0, type: 2}
   selection: 0
   tileSelection: 0
+  topBar: {fileID: 2136349218}
+  endPathButtonPrefab: {fileID: 169390024685589938, guid: d63c6edbd4af4ec4f8e5816a293a7563, type: 3}
+  sideBar: {fileID: 1654709798}
   mainCamera: {fileID: 519420031}
 --- !u!4 &1032272648
 Transform:
@@ -3974,7 +3977,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Save
+  m_text: 'Delete
 
 '
   m_isRightToLeft: 0

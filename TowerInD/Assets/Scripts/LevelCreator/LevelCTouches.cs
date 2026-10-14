@@ -4,6 +4,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public partial class LevelC
 {
@@ -13,6 +14,11 @@ public partial class LevelC
 
     [System.NonSerialized] private TileC previousTile;
     private Vector3Int previousPath;
+
+    public GameObject topBar;
+    public GameObject endPathButtonPrefab;
+    private GameObject currentEndPathButton;
+    public GameObject sideBar;
 
     public Camera mainCamera;
 
@@ -36,14 +42,22 @@ public partial class LevelC
 
                 Debug.Log($"Grid position: {gridPosition}");
 
+                if (gridPosition.x > groundMap.GetLength(0) || gridPosition.y > groundMap.GetLength(1) || gridPosition.x < 0 || gridPosition.y < 0)
+                {
+                    Debug.Log($"[!!!] Outside of 2D Array, Skipped");
+                    yield return null;
+                    continue;
+                }
+
                 /*if (groundMap[gridPosition.x, gridPosition.y].type == (int)TileType.PATH)
                     continue;*/
+
                 if (currentTile.type == (int)TileType.PATH)
                 {
                     // Check if the patth placement is proper
                     if (start == null)
                     {
-                        if (gridPosition.x != 0 && gridPosition.y != 0)
+                        if (gridPosition.x != 0)
                         {
                             Debug.Log($"Invalid Starting Path Placement!");
                             yield return null;
@@ -72,6 +86,23 @@ public partial class LevelC
                     else
                         start = currentTile;
                     previousPath = gridPosition;
+
+                    // Allow End
+                    if (gridPosition.x == size - 1)
+                    {
+                        // Show end button
+                        if (currentEndPathButton == null)
+                        {
+                            currentEndPathButton = Instantiate(endPathButtonPrefab);
+                            currentEndPathButton.transform.SetParent(topBar.transform, false);
+                            currentEndPathButton.GetComponent<Button>().onClick.AddListener(EndPlacement);
+                        }
+                    }
+                    else
+                    {
+                        if (currentEndPathButton != null)
+                            Destroy(currentEndPathButton);
+                    }
                 }
                 else
                 {
@@ -148,5 +179,18 @@ public partial class LevelC
 
 
         return false;
+    }
+
+    public void EndPlacement()
+    {
+        sideBar.SetActive(false);
+        if (currentEndPathButton != null)
+            Destroy(currentEndPathButton);
+        selection = false;
+
+        last = currentTile;
+
+        // testing purposes
+
     }
 }
