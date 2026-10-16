@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 public partial class LevelC
 {
@@ -221,12 +223,86 @@ public partial class LevelC
 
         last = previousTile;
 
+        // Generate the Routes
+        GenerateRoutes();
+
         // testing purposes
-        StartCoroutine(TestDrive());
+        //StartCoroutine(TestDrive());
+        testObj = Instantiate(testPrefab);
     }
 
+    public void GenerateRoutes()
+    {
+        TileC currentAim = start;
+        bool run = true;
+
+        Routes route = new Routes();
+
+        int currentCount = 0;
+        List<bool> splits = new List<bool>();
+        
+        while (run)
+        {
+            route.path.Add(currentAim.position);
+
+            // if currentAim bool split then repeat++;
+            if (currentAim.split)
+            {
+                if (currentCount + 1 == splits.Count)
+                {
+                    splits[currentCount] = true;
+                    currentCount++;
+                }
+                else if (splits.Count == currentCount)
+                {
+                    splits.Add(false);
+                    currentCount++;
+                }
+            }
+
+            // pick a path
+            if (currentAim.split && (splits[currentCount - 1] == true))
+                currentAim = currentAim.next2[1];
+            else
+                currentAim = currentAim.next2[0];
+
+            // end? check if its any of the end points
+            for (int i = 0; i < last2.Count; i++)
+            {
+                if (currentAim == last2[i])
+                {
+                    route.path.Add(currentAim.position);
+                    
+                    // clear out any dead ends
+                    for (int x = splits.Count - 1; x >= 0; x--)
+                    {
+                        if (splits[x] == false)
+                            break;
+                        else if (splits[x] == true)
+                        {
+                            splits.RemoveAt(x);
+                        }
+                    }
+
+                    if (splits.Count == 0)
+                        run = false;
+
+                    currentCount = 0;
+                    currentAim = start;
+                    tracks.Add(route);
+                    route = new Routes();
+                }
+            }
+        }
+
+    }
+
+
+    
     public GameObject testPrefab;
     private GameObject testObj;
+
+    /*
     public IEnumerator TestDrive()
     {
         bool moving = true;
@@ -276,5 +352,5 @@ public partial class LevelC
         }
 
         target.position = endPosition;
-    }
+    } */
 }

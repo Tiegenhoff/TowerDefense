@@ -15,8 +15,13 @@ public partial class LevelC : MonoBehaviour
 
     [System.NonSerialized] public TileC start;             //Starting Tile AT EDGE
     [System.NonSerialized] public TileC last;              //Ending Tile AT EDGE
+    [System.NonSerialized] public List<TileC> last2;              //Ending Tile AT EDGE
 
     [System.NonSerialized] public TileC[,] groundMap;     //2D Array Containing The Tiles
+
+
+    // pathing
+    public List<Routes> tracks;
 
     void Start()
     {
