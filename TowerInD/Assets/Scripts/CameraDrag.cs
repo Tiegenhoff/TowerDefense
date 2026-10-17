@@ -31,7 +31,7 @@ public class CameraDrag : MonoBehaviour
 
         while (Mouse.current.leftButton.isPressed)
         {
-            Debug.Log($"Panning");
+            //Debug.Log($"Panning");
             // Set joystick to mouse position
             Vector2 mousePos = Mouse.current.position.ReadValue();
             Vector3 circlePos = new Vector3(mousePos.x, mousePos.y, 0);
