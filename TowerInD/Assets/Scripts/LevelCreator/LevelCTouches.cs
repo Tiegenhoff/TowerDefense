@@ -32,7 +32,11 @@ public partial class LevelC
 
     public Camera mainCamera;
 
-    private Coroutine runningClick; 
+    private Coroutine runningClick;
+
+    // testing
+    [SerializeField] public List<Waves> eWavTest;
+    public WaveCreation wc;
 
     // Place Tile Routine
     public IEnumerator ClickTile()
@@ -364,9 +368,9 @@ public partial class LevelC
         //GenerateRoutes();
 
         // testing purposes
-        //StartCoroutine(TestDrive());
-        
-        //testObj = Instantiate(testPrefab);
+        //WaveCreation wc = new WaveCreation();
+        wc.EnemySpawn(eWavTest, 1f, tracks, 5f);
+
     }
 
     public void GenerateRoutes()
@@ -405,7 +409,7 @@ public partial class LevelC
             // pick a path
             if (currentAim.split && (splits[currentCount - 1] == true))
                 currentAim = currentAim.next2[1];
-            else if (currentAim.next2.Count == 0 || currentAim.next2 == null)
+            else if (currentAim.next2 == null || currentAim.next2.Count == 0)
                 Debug.Log($"Ending Achieved (ignore this)");
             else
                 currentAim = currentAim.next2[0];
@@ -451,11 +455,6 @@ public partial class LevelC
         Debug.Log($"Route Generation Completed");
 
     }
-
-
-    
-    public GameObject testPrefab;
-    private GameObject testObj;
 
     /*
     public IEnumerator TestDrive()
