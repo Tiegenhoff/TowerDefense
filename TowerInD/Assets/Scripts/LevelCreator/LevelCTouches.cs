@@ -11,7 +11,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public partial class LevelC
+public partial class LevelC : MonoBehaviour
 {
     public bool selection;
     public int tileSelection;
@@ -25,6 +25,7 @@ public partial class LevelC
     private List<Vector3Int> previousPath2;
 
     // ui
+    [Header("UI")]
     public GameObject topBar;
     public GameObject endPathButtonPrefab;
     private GameObject currentEndPathButton;
@@ -35,8 +36,8 @@ public partial class LevelC
     private Coroutine runningClick;
 
     // testing
-    [SerializeField] public List<Waves> eWavTest;
-    public WaveCreation wc;
+    //[SerializeField] public List<Waves> eWavTest;
+    //public WaveCreation wc;
 
     // Place Tile Routine
     public IEnumerator ClickTile()
@@ -369,8 +370,11 @@ public partial class LevelC
 
         // testing purposes
         //WaveCreation wc = new WaveCreation();
-        wc.EnemySpawn(eWavTest, 1f, tracks, 5f);
 
+        // EX
+        //wc.EnemySpawn(eWavTest, 1f, tracks, 5f);
+
+        SetupWaveControl();
     }
 
     public void GenerateRoutes()
