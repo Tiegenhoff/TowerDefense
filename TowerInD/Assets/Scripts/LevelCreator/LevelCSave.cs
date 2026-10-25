@@ -43,7 +43,9 @@ public partial class LevelC : MonoBehaviour
         {
             mSave = newMSAVE,
             tracksSave = tracks,
-            waveSave = waveList
+            waveSave = waveList,
+            spawnTime = spawnT,
+            breakTime = breakT,
         };
 
         // save the data

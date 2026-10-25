@@ -25,26 +25,59 @@ public partial class LevelC : MonoBehaviour
     // pathing
     [System.NonSerialized] public List<Routes> tracks;
 
+    // spawning
+    private float spawnT;
+    private float breakT;
+    private bool pickingSetup;
+
+    [Header("Selection")]
+    public GameObject selectionUI;
+    public GameObject sizeInput;
+
     void Start()
     {
-        //Make sure the size is proper
-        /*
-        if (sizeM < 18)
-            sizeM = 18;
-
-        if (sizeM % 2 != 0)
-            sizeM--;
-        */
         string filePath = Application.persistentDataPath;
         Debug.Log(filePath);
-
-        //groundTilemap.SetTile(new Vector3Int(0, 0, 0), tiles[(int)TileType.GRASS]);
-
-        StartCoroutine(PlaceTiles());
         
-
-
+        StartCoroutine(Setup());
+        
     }
+    public IEnumerator Setup()
+    {
+        // get placement setup
+        yield return StartCoroutine(SelectionLoop());
+
+        // generate and setup tiles
+        StartCoroutine(PlaceTiles());
+        yield return null;
+    }
+    
+
+    // wait for Size Selection
+    public IEnumerator SelectionLoop()
+    {
+        selectionUI.SetActive(true);
+        
+        // make sure selection starts at 0
+        sizeM = 0;
+
+        pickingSetup = true;
+        while (pickingSetup)
+        {
+
+            yield return null;
+        }
+
+        selectionUI.SetActive(false);
+
+        yield return null;
+    }
+
+
+
+
+
+
 
     public IEnumerator PlaceTiles()
     {
@@ -75,5 +108,17 @@ public partial class LevelC : MonoBehaviour
             }
             h++;
         }
+    }
+
+
+
+    // Extras
+    public void CompleteSelection()
+    {
+        sizeM = GetInput(sizeInput);
+        Debug.Log($"size: {sizeM}");
+
+        if (sizeM > 5)
+            pickingSetup = false;
     }
 }

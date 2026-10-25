@@ -9,6 +9,9 @@ public class LevelData
     public MapSave mSave;
     public List<Routes> tracksSave;
     public List<Waves> waveSave;
+
+    public float spawnTime;
+    public float breakTime;
 }
 
 

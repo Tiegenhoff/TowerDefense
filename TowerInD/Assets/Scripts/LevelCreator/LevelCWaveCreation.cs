@@ -72,10 +72,10 @@ public partial class LevelC : MonoBehaviour
         int waveNum = waveList.Count - 1;
 
         // get amount of enemies and put that many in
-        for (int i = GetInput(); i > 0; i--)
+        for (int i = GetInput(amtInput); i > 0; i--)
         {
             // on first run setup ui portion
-            if (i == GetInput())
+            if (i == GetInput(amtInput))
             {
                 GameObject parent = waveListsUI[waveNum].transform.Find("EnemyData").gameObject;
                 GameObject enemyIcon = Instantiate(waveEnemyPrefab, parent.transform);
@@ -133,9 +133,9 @@ public partial class LevelC : MonoBehaviour
     }
 
     // getting the amount of enemies from the input field
-    public int GetInput()
+    public int GetInput(GameObject inputT)
     {
-        TMP_InputField input = amtInput.GetComponent<TMP_InputField>();
+        TMP_InputField input = inputT.GetComponent<TMP_InputField>();
         int.TryParse(input.text, out int amount);
 
         return amount;
