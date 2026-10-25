@@ -2752,6 +2752,7 @@ GameObject:
   - component: {fileID: 754380361}
   - component: {fileID: 754380360}
   - component: {fileID: 754380359}
+  - component: {fileID: 754380362}
   m_Layer: 5
   m_Name: Reset
   m_TagString: Untagged
@@ -2822,7 +2823,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 754380360}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 754380362}
+        m_TargetAssemblyTypeName: ResetScene, Assembly-CSharp
+        m_MethodName: ResetMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &754380360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2861,6 +2874,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754380357}
   m_CullTransparentMesh: 1
+--- !u!114 &754380362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754380357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7b2b0c4e5ba8e43be9c4e2f184a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResetScene
+  sceneName: CreateLevel
 --- !u!1 &790056796
 GameObject:
   m_ObjectHideFlags: 0

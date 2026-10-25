@@ -118,7 +118,7 @@ public partial class LevelC : MonoBehaviour
         sizeM = GetInput(sizeInput);
         Debug.Log($"size: {sizeM}");
 
-        if (sizeM > 5)
+        if (sizeM > 5 || sizeM < 33)
             pickingSetup = false;
     }
 }
