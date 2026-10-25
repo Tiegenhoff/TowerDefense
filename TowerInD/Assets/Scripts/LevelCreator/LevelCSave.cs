@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public partial class LevelC : MonoBehaviour
@@ -23,12 +24,17 @@ public partial class LevelC : MonoBehaviour
             newMSAVE.mapColumnSaves[x].tS = new List<TileS>();
             for (int y = 0; y < heightSize; y++)
             {
-                newMSAVE.mapColumnSaves[x].tS.Add(new TileS());
-                
-                // copy the data
-                newMSAVE.mapColumnSaves[x].tS[y].placeable = groundMap[x, y].placeable;
-                newMSAVE.mapColumnSaves[x].tS[y].position = groundMap[x, y].position;
-                newMSAVE.mapColumnSaves[x].tS[y].type = groundMap[x, y].type;
+                // if GRASS skip over for the sake of file size
+                if (groundMap[x, y].type != (int)TileType.GRASS) // because of this, when loading levels, position will have to be relied on
+                {
+                    // copy the data
+                    newMSAVE.mapColumnSaves[x].tS.Add(new TileS
+                    {
+                        placeable = groundMap[x, y].placeable,
+                        position = new Vector2Int(x, y),
+                        type = groundMap[x, y].type
+                    });
+                }
             }
         }
 
@@ -43,7 +49,7 @@ public partial class LevelC : MonoBehaviour
         // save the data
         saveName = CleanFileName(saveName) + ".json";
 
-        string json = JsonUtility.ToJson(levelData, true);
+        string json = JsonUtility.ToJson(levelData, false);
         File.WriteAllText(Path.Combine(Application.persistentDataPath, saveName), json);
     }
 

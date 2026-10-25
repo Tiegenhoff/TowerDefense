@@ -30,6 +30,6 @@ public class MapColumnSave
 public class TileS
 {
     public bool placeable;      //Can Units Be Placed On Me?
-    public Vector3 position;    //Current Position For Pathfinding
+    public Vector2Int position; //Position in groundMap
     public int type;            //(int)TileType.GRASS etc
 }
