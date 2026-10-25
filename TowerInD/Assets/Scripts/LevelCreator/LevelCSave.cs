@@ -50,11 +50,17 @@ public partial class LevelC : MonoBehaviour
     // to clean up name
     private string CleanFileName(string input)
     {
-        char[] invalidChars = Path.GetInvalidFileNameChars();
-        string cleanedName = new string(input.Where(c => !invalidChars.Contains(c)).ToArray());
+        string cleanedName = input;
 
-        cleanedName = cleanedName.Trim();
+        if (!string.IsNullOrEmpty(cleanedName))
+        {
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            cleanedName = new string(input.Where(c => !invalidChars.Contains(c)).ToArray());
 
+            cleanedName = cleanedName.Trim();
+        }
+
+        // double check after cleaning
         if (string.IsNullOrEmpty(cleanedName))
             cleanedName = "LevelSave" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 

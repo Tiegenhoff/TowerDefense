@@ -63,6 +63,9 @@ public partial class LevelC : MonoBehaviour
     // add to the current wave
     public void AddEnemy()
     {
+        if (selectedEnemy == null || selectedImage == null)
+            return;
+
         if (waveList == null || waveList.Count == 0)
             return;
 

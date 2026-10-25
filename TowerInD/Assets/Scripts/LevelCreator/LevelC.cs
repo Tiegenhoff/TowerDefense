@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -34,7 +35,8 @@ public partial class LevelC : MonoBehaviour
         if (sizeM % 2 != 0)
             sizeM--;
         */
-
+        string filePath = Application.persistentDataPath;
+        Debug.Log(filePath);
 
         //groundTilemap.SetTile(new Vector3Int(0, 0, 0), tiles[(int)TileType.GRASS]);
 
