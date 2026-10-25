@@ -21,6 +21,8 @@ public partial class LevelC : MonoBehaviour
     public GameObject wavePrefab;
     public GameObject waveEnemyPrefab;
     public GameObject amtInput;         // the input field for amount
+    public GameObject spawnInput;       // for spawnrate
+    public GameObject waveInput;        // for waverate
     [Header("WaveUIDirectory")]
     public GameObject waveListParent;
 
@@ -30,6 +32,10 @@ public partial class LevelC : MonoBehaviour
     [Header("ButtonTopUI")]
     public GameObject savePrefab;
     private GameObject currentSaveButton;
+
+    // spawning
+    private float spawnT;
+    private float breakT;
 
     // setup
     public void SetupWaveControl()
@@ -145,6 +151,9 @@ public partial class LevelC : MonoBehaviour
     public void ConfirmWaveSelection()
     {
         waveUI.SetActive(false);
+
+        spawnT = GetInput(spawnInput);
+        breakT = GetInput(waveInput);
 
         // temp save here
         SaveToJSON(null);

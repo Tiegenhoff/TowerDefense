@@ -25,9 +25,6 @@ public partial class LevelC : MonoBehaviour
     // pathing
     [System.NonSerialized] public List<Routes> tracks;
 
-    // spawning
-    private float spawnT;
-    private float breakT;
     private bool pickingSetup;
 
     [Header("Selection")]
