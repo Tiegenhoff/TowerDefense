@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI;
@@ -146,17 +147,33 @@ public partial class LevelC : MonoBehaviour
 
         return amount;
     }
+    public float GetInputF(GameObject inputT)
+    {
+        TMP_InputField input = inputT.GetComponent<TMP_InputField>();
+        float.TryParse(input.text, out float amount);
+
+        return amount;
+    }
 
     // confirm the wave list and hide (For now actually call a save and save to json because we have no selectable units)
     public void ConfirmWaveSelection()
     {
-        waveUI.SetActive(false);
+        spawnT = GetInputF(spawnInput);
+        breakT = GetInputF(waveInput);
 
-        spawnT = GetInput(spawnInput);
-        breakT = GetInput(waveInput);
+        Debug.Log($"SpawnRate: {spawnT} \nWaveRate: {breakT}");
+
+        if (spawnT <= 0 || breakT <= 0)
+            return;
+
+        waveUI.SetActive(false);
+        Destroy(currentSaveButton);
 
         // temp save here
         SaveToJSON(null);
+
+        // show test wave
+        wc.EnemySpawn(waveList, spawnT, tracks, breakT);
     }
 
     
