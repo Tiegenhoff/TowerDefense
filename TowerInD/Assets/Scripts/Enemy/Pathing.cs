@@ -52,6 +52,7 @@ public class Pathing : MonoBehaviour
                 moving = false;
         }
 
+        Destroy(gameObject);
         yield return null;
     }
 
