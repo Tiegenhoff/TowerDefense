@@ -27,6 +27,9 @@ public partial class LevelC : MonoBehaviour
     private GameObject selectedEnemy;   // selected enemy to add
     private Image selectedImage;
 
+    [Header("ButtonTopUI")]
+    public GameObject savePrefab;
+    private GameObject currentSaveButton;
 
     // setup
     public void SetupWaveControl()
@@ -41,6 +44,11 @@ public partial class LevelC : MonoBehaviour
 
         // start
         waveUI.SetActive(true);
+        
+        // setup save button
+        currentSaveButton = Instantiate(savePrefab);
+        currentSaveButton.transform.SetParent(topBar.transform, false);
+        currentSaveButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(ConfirmWaveSelection);
     }
 
 
@@ -129,4 +137,15 @@ public partial class LevelC : MonoBehaviour
 
         return amount;
     }
+
+    // confirm the wave list and hide (For now actually call a save and save to json because we have no selectable units)
+    public void ConfirmWaveSelection()
+    {
+        waveUI.SetActive(false);
+
+        // temp save here
+        SaveToJSON(null);
+    }
+
+    
 }

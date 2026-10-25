@@ -161,7 +161,7 @@ public partial class LevelC : MonoBehaviour
                     //!
 
                     // Allow End (only when the actual last tile that was placed was in the endzone
-                    /*if (gridPosition.x == size - 1)
+                    /*if (gridPosition.x == sizeM - 1)
                     {
                         // Show end button
                         if (currentEndPathButton == null)
@@ -179,7 +179,7 @@ public partial class LevelC : MonoBehaviour
                     int endingTime = 0;
                     foreach (var ppVect3Int in previousPath2)
                     {
-                        if (ppVect3Int.x == size - 1)
+                        if (ppVect3Int.x == sizeM - 1)
                             endingTime += 0;
                         else
                             endingTime++;
@@ -391,7 +391,7 @@ public partial class LevelC : MonoBehaviour
         
         while (run)
         {
-            Debug.Log($"HelloRun");
+            //Debug.Log($"HelloRun");
             route.path.Add(currentAim.position);
 
             // if currentAim bool split then repeat++;

@@ -7,7 +7,8 @@ using UnityEngine.Tilemaps;
 
 public partial class LevelC : MonoBehaviour
 {
-    public int size = 18;           //Pick Map Size
+    public int sizeM = 18;           //Pick Map Size
+    private int heightSize;         //Map size height
     public Tilemap groundTilemap;   //Base Level Ground Tilemap
 
     public List<AutoTile> tiles;    //List Of Tiles, Use Enum TileType
@@ -27,11 +28,11 @@ public partial class LevelC : MonoBehaviour
     {
         //Make sure the size is proper
         /*
-        if (size < 18)
-            size = 18;
+        if (sizeM < 18)
+            sizeM = 18;
 
-        if (size % 2 != 0)
-            size--;
+        if (sizeM % 2 != 0)
+            sizeM--;
         */
 
 
@@ -51,14 +52,14 @@ public partial class LevelC : MonoBehaviour
         gtile.type = (int)TileType.GRASS;
 
         //setup boundries
-        int heightSize = (int)(size * .56);
+        heightSize = (int)(sizeM * .56);
 
         //setup array
-        groundMap = new TileC[size, heightSize];
+        groundMap = new TileC[sizeM, heightSize];
 
         int h = 0;
         int v = 0;
-        for (int x = 0; x < size; x++)
+        for (int x = 0; x < sizeM; x++)
         {
             v = 0;
             for (int y = 0; y < heightSize; y++)
