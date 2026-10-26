@@ -268,7 +268,6 @@ GameObject:
   m_Component:
   - component: {fileID: 56157926}
   - component: {fileID: 56157925}
-  - component: {fileID: 56157924}
   - component: {fileID: 56157923}
   m_Layer: 0
   m_Name: TempCamera
@@ -321,14 +320,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!81 &56157924
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 56157922}
-  m_Enabled: 1
 --- !u!20 &56157925
 Camera:
   m_ObjectHideFlags: 0
@@ -2205,6 +2196,7 @@ GameObject:
   - component: {fileID: 1655756830}
   - component: {fileID: 1655756829}
   - component: {fileID: 1655756828}
+  - component: {fileID: 1655756831}
   m_Layer: 5
   m_Name: CreateButton
   m_TagString: Untagged
@@ -2275,7 +2267,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1655756829}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1655756831}
+        m_TargetAssemblyTypeName: ResetScene, Assembly-CSharp
+        m_MethodName: ResetMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1655756829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2314,6 +2318,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655756826}
   m_CullTransparentMesh: 1
+--- !u!114 &1655756831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655756826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7b2b0c4e5ba8e43be9c4e2f184a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResetScene
+  sceneName: CreateLevel
 --- !u!1 &1742786738
 GameObject:
   m_ObjectHideFlags: 0

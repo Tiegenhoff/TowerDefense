@@ -32,9 +32,7 @@ public class EditorButton : MonoBehaviour
 
         }
 
-
         editorUI.SetActive(open);
     }
-
 
 }
