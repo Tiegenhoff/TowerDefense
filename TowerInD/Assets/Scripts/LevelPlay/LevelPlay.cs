@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 
 public partial class LevelPlay : MonoBehaviour
 {
+    [Header("Basics")]
+    public Camera mainCamera;
+
     // level parameters
     private TileC[,] groundMap;
     private List<Routes> tracksSave;
@@ -17,6 +20,7 @@ public partial class LevelPlay : MonoBehaviour
     [Header("TileMap")]
     public Tilemap groundTilemap;
     public List<AutoTile> tiles;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

@@ -24,5 +24,4 @@ public partial class LevelPlay : MonoBehaviour
         yield return null;
     }
 
-
 }

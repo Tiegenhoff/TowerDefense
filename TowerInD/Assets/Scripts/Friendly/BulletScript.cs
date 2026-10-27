@@ -49,7 +49,7 @@ public class BulletScript : MonoBehaviour
             player = FindTarget(turretRadius);
             if (player == null)
             {
-                Debug.Log("No enemies present");
+                //Debug.Log("No enemies present");
                 yield return new WaitForSeconds(0.1f);
                 continue;
             }

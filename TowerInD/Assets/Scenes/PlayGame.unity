@@ -410,11 +410,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78d6306b2e2288142947880507a0bcfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelPlay
+  mainCamera: {fileID: 519420031}
   groundTilemap: {fileID: 2107732485}
   tiles:
   - {fileID: 11400000, guid: a683cda9e7011854684bd41215b28ee1, type: 2}
   - {fileID: 11400000, guid: ae2579e91986ba14888ebbc4655ecbf5, type: 2}
   - {fileID: 11400000, guid: 5d02ac12b396a7d4895a4967b031f6b0, type: 2}
+  turretPrefab: {fileID: 8952672181182449673, guid: 70b26d923bdfd934e9f38cac03d45d5b, type: 3}
   startedPlacement: 0
   wc: {fileID: 160167121}
 --- !u!114 &160167121
@@ -2191,6 +2193,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361144428}
     m_Modifications:
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 160167120}
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartPlaceTurrets
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LevelPlay, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387715257121947455, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5800587669062652451, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
       propertyPath: m_Name
       value: Unit
@@ -2275,6 +2305,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9071397522906526040, guid: 3f7c18ad49229b14fa82a4cfc4aa9902, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 83973aaf62091b8409c0c8d5005b62c7, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
