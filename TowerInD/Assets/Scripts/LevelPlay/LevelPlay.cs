@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class LevelPlay : MonoBehaviour
+public partial class LevelPlay : MonoBehaviour
 {
     // level parameters
     private TileC[,] groundMap;
@@ -37,7 +37,7 @@ public class LevelPlay : MonoBehaviour
         StartCoroutine(PlaceTiles());
     }
 
-    public IEnumerator PlaceTiles()
+    private IEnumerator PlaceTiles()
     {
         for (int x = 0; x < groundMap.GetLength(0); x++)
         {
@@ -49,7 +49,8 @@ public class LevelPlay : MonoBehaviour
             }
         }
 
-        // once done start play (maybe make it based off placements
+        // once done start play
+        StartCoroutine(StartWaves());
     }
 
 
@@ -89,7 +90,6 @@ public class LevelPlay : MonoBehaviour
 
 
     }
-
 
     private LevelData Load(string fileName)
     {
