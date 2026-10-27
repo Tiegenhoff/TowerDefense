@@ -829,7 +829,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 83973aaf62091b8409c0c8d5005b62c7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4195,7 +4195,7 @@ GameObject:
   - component: {fileID: 1023251505}
   - component: {fileID: 1023251504}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4264,7 +4264,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1023251505}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1032272647}
+        m_TargetAssemblyTypeName: LevelC, Assembly-CSharp
+        m_MethodName: StartPlaceTurrets
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1023251505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4341,6 +4353,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5d02ac12b396a7d4895a4967b031f6b0, type: 2}
   selectionUI: {fileID: 790056796}
   sizeInput: {fileID: 1214842853}
+  numberTurrets: 3
+  turretPrefab: {fileID: 8952672181182449673, guid: 70b26d923bdfd934e9f38cac03d45d5b, type: 3}
   selection: 0
   tileSelection: 0
   topBar: {fileID: 2136349218}
