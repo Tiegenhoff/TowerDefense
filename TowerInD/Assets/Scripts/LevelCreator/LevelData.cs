@@ -12,6 +12,8 @@ public class LevelData
 
     public float spawnTime;
     public float breakTime;
+
+    public Vector2Int size;
 }
 
 

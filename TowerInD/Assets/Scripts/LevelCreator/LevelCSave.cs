@@ -46,6 +46,7 @@ public partial class LevelC : MonoBehaviour
             waveSave = waveList,
             spawnTime = spawnT,
             breakTime = breakT,
+            size = new Vector2Int(sizeM, heightSize)
         };
 
         // save the data

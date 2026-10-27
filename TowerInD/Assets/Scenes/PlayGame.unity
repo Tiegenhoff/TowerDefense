@@ -374,6 +374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 160167119}
+  - component: {fileID: 160167120}
   m_Layer: 0
   m_Name: MainPlaySystem
   m_TagString: Untagged
@@ -396,6 +397,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &160167120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160167118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d6306b2e2288142947880507a0bcfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelPlay
+  groundTilemap: {fileID: 2107732485}
+  tiles:
+  - {fileID: 11400000, guid: a683cda9e7011854684bd41215b28ee1, type: 2}
+  - {fileID: 11400000, guid: ae2579e91986ba14888ebbc4655ecbf5, type: 2}
+  - {fileID: 11400000, guid: 5d02ac12b396a7d4895a4967b031f6b0, type: 2}
 --- !u!1 &169318176
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,6 +1383,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5d02ac12b396a7d4895a4967b031f6b0, type: 2}
   selectionUI: {fileID: 0}
   sizeInput: {fileID: 0}
+  numberTurrets: 0
+  turretPrefab: {fileID: 0}
   selection: 0
   tileSelection: 0
   topBar: {fileID: 0}
