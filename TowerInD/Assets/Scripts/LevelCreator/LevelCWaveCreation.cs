@@ -1,9 +1,5 @@
-using JetBrains.Annotations;
-using NUnit.Framework;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Rendering;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,7 +47,7 @@ public partial class LevelC : MonoBehaviour
 
         // start
         waveUI.SetActive(true);
-        
+
         // setup save button
         currentSaveButton = Instantiate(savePrefab);
         currentSaveButton.transform.SetParent(topBar.transform, false);
@@ -176,5 +172,5 @@ public partial class LevelC : MonoBehaviour
         wc.EnemySpawn(waveList, spawnT, tracks, breakT);
     }
 
-    
+
 }

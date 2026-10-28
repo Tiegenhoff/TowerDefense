@@ -1,8 +1,5 @@
-using JetBrains.Annotations;
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -26,6 +23,7 @@ public partial class LevelC : MonoBehaviour
     [System.NonSerialized] public List<Routes> tracks;
 
     private bool pickingSetup;
+    private bool mapReady;
 
     [Header("Selection")]
     public GameObject selectionUI;
@@ -35,9 +33,9 @@ public partial class LevelC : MonoBehaviour
     {
         string filePath = Application.persistentDataPath;
         Debug.Log(filePath);
-        
+
         StartCoroutine(Setup());
-        
+
     }
     public IEnumerator Setup()
     {
@@ -45,16 +43,16 @@ public partial class LevelC : MonoBehaviour
         yield return StartCoroutine(SelectionLoop());
 
         // generate and setup tiles
-        StartCoroutine(PlaceTiles());
+        yield return StartCoroutine(PlaceTiles());
         yield return null;
     }
-    
+
 
     // wait for Size Selection
     public IEnumerator SelectionLoop()
     {
         selectionUI.SetActive(true);
-        
+
         // make sure selection starts at 0
         sizeM = 0;
 
@@ -78,10 +76,9 @@ public partial class LevelC : MonoBehaviour
 
     public IEnumerator PlaceTiles()
     {
-        //setup easy tile data
-        TileC gtile = new TileC();
-        gtile.placeable = true;
-        gtile.type = (int)TileType.GRASS;
+        mapReady = false;
+        ResetNodePaths();
+        groundTilemap.ClearAllTiles();
 
         //setup boundries
         heightSize = (int)(sizeM * .56);
@@ -97,7 +94,8 @@ public partial class LevelC : MonoBehaviour
             for (int y = 0; y < heightSize; y++)
             {
                 Debug.Log($"{h}, {v}");
-                groundMap[h,v] = gtile;
+                Vector3Int cell = new Vector3Int(x, y, 0);
+                groundMap[h, v] = NewGroundTile(cell, (int)TileType.GRASS, true);
                 groundTilemap.SetTile(new Vector3Int(x, y, 0), tiles[(int)TileType.GRASS]);
 
                 v++;
@@ -105,6 +103,7 @@ public partial class LevelC : MonoBehaviour
             }
             h++;
         }
+        mapReady = true;
     }
 
 
