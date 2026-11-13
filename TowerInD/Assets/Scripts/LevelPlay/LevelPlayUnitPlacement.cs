@@ -3,21 +3,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public partial class LevelPlay : MonoBehaviour
 {
     //public int numberTurrets;
     [Header("TempSetupTurret")]
     public GameObject turretPrefab;
+    public GameObject slowTurretPrefab;
+    public GameObject pulseTurretPrefab;
+    private GameObject selectedTurretPrefab;
+
+    // Assign these methods to turret buttons in the gameplay UI.
+    public void SelectBasicTurret() { SelectTurret(turretPrefab); }
+    public void SelectSlowTurret() { SelectTurret(slowTurretPrefab); }
+    public void SelectPulseTurret() { SelectTurret(pulseTurretPrefab); }
+
+    private void SelectTurret(GameObject prefab)
+    {
+        if (prefab == null)
+        {
+            Debug.LogWarning("Assign this turret prefab in the LevelPlay Inspector.");
+            return;
+        }
+        if (placingTurrets)
+        {
+            if (selectedTurretPrefab == prefab)
+            {
+                placingTurrets = false;
+                if (placementRoutine != null) StopCoroutine(placementRoutine);
+                placementRoutine = null;
+                return;
+            }
+            selectedTurretPrefab = prefab;
+            return;
+        }
+        selectedTurretPrefab = prefab;
+        StartPlacement();
+    }
 
     private Vector3 turretSpawnPos;
     private bool placingTurrets = false;
+    private Coroutine placementRoutine;
 
     // for checking if a turret is already there
     private bool[,] unitPlacement;
 
-    public void StartPlaceTurrets()
+    // Preserve the existing basic turret button.
+    public void StartPlaceTurrets() { SelectBasicTurret(); }
+
+    private void StartPlacement()
     {
+        if (selectedTurretPrefab == null)
+            selectedTurretPrefab = turretPrefab;
+        if (selectedTurretPrefab == null || groundMap == null)
+        {
+            Debug.LogWarning("Create the map and assign a turret prefab before placing turrets.");
+            return;
+        }
         // check for fist time setup
         if (unitPlacement == null)
         {
@@ -30,6 +73,8 @@ public partial class LevelPlay : MonoBehaviour
         {
             // allow the user to cancel placement
             placingTurrets = false;
+            if (placementRoutine != null) StopCoroutine(placementRoutine);
+            placementRoutine = null;
             Debug.Log($"Stop Placement");
             return;
         }
@@ -37,19 +82,21 @@ public partial class LevelPlay : MonoBehaviour
         {
             placingTurrets = true;
             Debug.Log($"Starting PlaceTurrets");
-            StartCoroutine(PlaceTurrets());
+            placementRoutine = StartCoroutine(PlaceTurrets());
         }
         
     }
 
     private IEnumerator PlaceTurrets()
     {
+        // Ignore the UI button press that started placement.
+        yield return null;
         while (placingTurrets)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            Vector2 mousePos;
+            if (GetPlacementPress(out mousePos) && !PlacementPointerOverUI(mousePos))
             {
                 Debug.Log($"Click");
-                Vector2 mousePos = Mouse.current.position.ReadValue();
                 Vector3 mousePosWorld = mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0));
 
                 mousePosWorld.z = -1;
@@ -83,7 +130,7 @@ public partial class LevelPlay : MonoBehaviour
 
                 // If mouse position is legal, place turret on mouse pos
                 turretSpawnPos = worldPos;
-                Instantiate(turretPrefab, turretSpawnPos, Quaternion.identity);
+                Instantiate(selectedTurretPrefab, turretSpawnPos, Quaternion.identity);
                 //numberTurrets--;
                 Debug.Log($"Turret placed");
 
@@ -97,5 +144,37 @@ public partial class LevelPlay : MonoBehaviour
     }
 
 
+
+    private bool GetPlacementPress(out Vector2 position)
+    {
+        position = Vector2.zero;
+        if (Touchscreen.current != null)
+        {
+            foreach (var touch in Touchscreen.current.touches)
+                if (touch.press.wasPressedThisFrame)
+                {
+                    position = touch.position.ReadValue();
+                    return true;
+                }
+        }
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            position = Mouse.current.position.ReadValue();
+            return true;
+        }
+        return false;
+    }
+
+    private bool PlacementPointerOverUI(Vector2 position)
+    {
+        if (EventSystem.current == null) return false;
+        PointerEventData pointer = new PointerEventData(EventSystem.current);
+        pointer.position = position;
+        List<RaycastResult> hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, hits);
+        foreach (RaycastResult hit in hits)
+            if (hit.module is UnityEngine.UI.GraphicRaycaster) return true;
+        return false;
+    }
 
 }

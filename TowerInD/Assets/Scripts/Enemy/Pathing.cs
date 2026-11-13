@@ -14,6 +14,28 @@ public class Pathing : MonoBehaviour
 
     public float tileSpeed;
 
+    // Every slowing turret owns one entry. The lowest multiplier wins.
+    private Dictionary<SlowTurret, float> slows = new Dictionary<SlowTurret, float>();
+
+    public void SetSlow(SlowTurret source, float speedMultiplier)
+    {
+        if (source != null)
+            slows[source] = Mathf.Clamp(speedMultiplier, 0.05f, 1f);
+    }
+
+    public void RemoveSlow(SlowTurret source)
+    {
+        slows.Remove(source);
+    }
+
+    private float CurrentSpeedMultiplier()
+    {
+        float multiplier = 1f;
+        foreach (float value in slows.Values)
+            multiplier = Mathf.Min(multiplier, value);
+        return multiplier;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void BeginPassage(List<Vector3> p)
     {
@@ -40,7 +62,7 @@ public class Pathing : MonoBehaviour
 
                 transform.position = Vector3.Lerp(path[i] + forwardSet, path[i + 1] + forwardSet, t);
 
-                elapsedTime += Time.deltaTime;
+                elapsedTime += Time.deltaTime * CurrentSpeedMultiplier();
                 yield return null;
             }
 

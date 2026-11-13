@@ -59,6 +59,8 @@ public class BulletTrackingScript : MonoBehaviour
         // If bullet and enemy are touching, both destruct
         else if (bulletCollider.IsTouching(enemyCollider))
         {
+            EnemyMaterialDrop drop = enemy.GetComponentInParent<EnemyMaterialDrop>();
+            if (drop != null) drop.DropMaterial();
             Destroy(enemy);
             Destroy(gameObject);
             enabled = false;
