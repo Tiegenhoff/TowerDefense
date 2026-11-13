@@ -73,14 +73,7 @@ public partial class LevelC : MonoBehaviour
                 DrawNodeLine(arrow, lineColor, false);
             }
 
-            Vector3Int first = connection.cells[0];
-            Vector3Int lastCell = connection.cells[connection.cells.Count - 1];
-            if (first.x != lastCell.x && first.y != lastCell.y)
-            {
-                // this handle becomes a real node when moved or used for a branch
-                DrawNodeCircle(graph.GetBend(connection), bendRadius,
-                    valid ? bendColor : invalidPathColor);
-            }
+
         }
 
         foreach (var node in graph.nodes)

@@ -27,8 +27,9 @@ public partial class LevelC : MonoBehaviour
         while (selection)
         {
             Vector3Int gridPosition;
-            if (mapReady && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame &&
-                !PointerOverUI() && TryGetMouseCell(out gridPosition))
+            Vector2 position;
+            if (mapReady && PointerPressed(out position) &&
+                !PointerOverUI(position) && TryGetCell(position, out gridPosition))
             {
                 if (groundMap[gridPosition.x, gridPosition.y].type != (int)TileType.PATH)
                 {
@@ -78,34 +79,52 @@ public partial class LevelC : MonoBehaviour
         HideNodePaths();
     }
 
-    private bool PointerOverUI()
+    // Read a real touch on a phone and a mouse click in the editor.
+    private bool PointerPressed(out Vector2 position)
     {
-        // raycast now so this also works before EventSystem's Update this frame
-        if (EventSystem.current == null || Mouse.current == null)
-            return false;
-        PointerEventData pointer = new PointerEventData(EventSystem.current);
-        pointer.position = Mouse.current.position.ReadValue();
-        List<RaycastResult> hits = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointer, hits);
-        foreach (RaycastResult hit in hits)
+        position = Vector2.zero;
+        if (Touchscreen.current != null)
         {
-            if (hit.module is UnityEngine.UI.GraphicRaycaster)
-                return true;
+            foreach (var touch in Touchscreen.current.touches)
+            {
+                if (touch.press.wasPressedThisFrame)
+                {
+                    position = touch.position.ReadValue();
+                    return true;
+                }
+            }
+        }
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            position = Mouse.current.position.ReadValue();
+            return true;
         }
         return false;
     }
 
-    private bool TryGetMouseCell(out Vector3Int cell)
+    private bool PointerOverUI(Vector2 position)
+    {
+        if (EventSystem.current == null)
+            return false;
+        PointerEventData pointer = new PointerEventData(EventSystem.current);
+        pointer.position = position;
+        List<RaycastResult> hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, hits);
+        foreach (RaycastResult hit in hits)
+            if (hit.module is UnityEngine.UI.GraphicRaycaster)
+                return true;
+        return false;
+    }
+
+    private bool TryGetCell(Vector2 screenPosition, out Vector3Int cell)
     {
         cell = Vector3Int.zero;
-        if (!mapReady || Mouse.current == null || groundTilemap == null)
+        if (!mapReady || groundTilemap == null)
             return false;
         Camera camera = mainCamera != null ? mainCamera : Camera.main;
         if (camera == null)
             return false;
-
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        Ray ray = camera.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
+        Ray ray = camera.ScreenPointToRay(screenPosition);
         Plane plane = new Plane(groundTilemap.transform.forward, groundTilemap.GetCellCenterWorld(Vector3Int.zero));
         float distance;
         if (!plane.Raycast(ray, out distance))

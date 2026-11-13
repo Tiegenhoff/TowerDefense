@@ -13,7 +13,12 @@ public partial class LevelC : MonoBehaviour
     [TextArea] public string pathMessage;
     [System.NonSerialized] public NodePathGraph nodePaths = new NodePathGraph();
 
+    [Tooltip("Hold this long on a node or path before dragging to move it.")]
+    public float nodeMoveHoldSeconds = .45f;
+    [Tooltip("Screen pixels a finger can drift while holding.")]
+    public float nodeDragThreshold = 15f;
     private bool nodeSelection;
+    private bool deleteNodeMode;
     private NodePathGraph dragBase;
     private NodePathGraph dragPreview;
     private int dragNode;
@@ -30,7 +35,8 @@ public partial class LevelC : MonoBehaviour
     // connect the new button to this method
     public void SelectNodePath()
     {
-        bool deselect = nodeSelection;
+        bool deselect = nodeSelection && !deleteNodeMode;
+        deleteNodeMode = false;
         StopPlacement();
         if (deselect || !mapReady)
             return;
@@ -41,72 +47,150 @@ public partial class LevelC : MonoBehaviour
         }
         nodeSelection = true;
         tileSelection = (int)TileType.PATH;
+        nodePaths.NormalizeNodes();
         DrawNodePaths(nodePaths);
-        SetPathMessage("Drag to draw. Drag a node to move it. Shift-drag to branch. R flips a bend.");
+        SetPathMessage("Drag to draw or branch. Hold, then drag to move. Corners are nodes.");
+        runningClick = StartCoroutine(ClickNodePath());
+    }
+
+    // Connect a UI button's OnClick to this method. Press again to leave delete mode.
+    public void ToggleDeleteNodeMode()
+    {
+        bool turnOff = nodeSelection && deleteNodeMode;
+        StopPlacement();
+        deleteNodeMode = !turnOff;
+        if (turnOff || !mapReady)
+            return;
+        if (HasUntrackedPathTiles())
+        {
+            deleteNodeMode = false;
+            SetPathMessage("These tiles have no node graph. Load a node-based save or start a new map to edit paths.");
+            return;
+        }
+        nodeSelection = true;
+        tileSelection = (int)TileType.PATH;
+        DrawNodePaths(nodePaths);
+        SetPathMessage("Delete mode: tap a node or path to delete it. Tap Delete again to exit.");
         runningClick = StartCoroutine(ClickNodePath());
     }
 
     private IEnumerator ClickNodePath()
     {
-        // don't use the mouse press from the UI button
-        yield return null;
+        yield return null; // ignore the UI button press
+        bool tracking = false;
+        bool touchInput = false;
+        int touchId = -1;
+        Vector2 startPosition = Vector2.zero;
+        Vector3Int startCell = Vector3Int.zero;
+        float startTime = 0f;
+        bool gestureStarted = false;
+
         while (nodeSelection)
         {
-            if (Mouse.current == null)
+            Vector2 position = Vector2.zero;
+            bool pressed = false, held = false, released = false, cancelled = false;
+            if (!tracking)
             {
-                yield return null;
-                continue;
+                if (Touchscreen.current != null)
+                {
+                    foreach (var touch in Touchscreen.current.touches)
+                    {
+                        if (!touch.press.wasPressedThisFrame) continue;
+                        position = touch.position.ReadValue();
+                        touchId = touch.touchId.ReadValue();
+                        touchInput = true;
+                        pressed = held = true;
+                        break;
+                    }
+                }
+                if (!pressed && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    position = Mouse.current.position.ReadValue();
+                    touchInput = false;
+                    pressed = held = true;
+                }
             }
-
-            Keyboard keyboard = Keyboard.current;
-            if (Mouse.current.rightButton.wasPressedThisFrame ||
-                (keyboard != null && keyboard.escapeKey.wasPressedThisFrame))
+            else if (touchInput)
             {
-                CancelNodeDrag();
-                yield return null;
-                continue;
+                bool found = false;
+                if (Touchscreen.current != null)
+                {
+                    foreach (var touch in Touchscreen.current.touches)
+                    {
+                        if (touch.touchId.ReadValue() != touchId) continue;
+                        found = true;
+                        position = touch.position.ReadValue();
+                        var phase = touch.phase.ReadValue();
+                        cancelled = phase == UnityEngine.InputSystem.TouchPhase.Canceled;
+                        released = touch.press.wasReleasedThisFrame || phase == UnityEngine.InputSystem.TouchPhase.Ended;
+                        held = touch.press.isPressed;
+                        break;
+                    }
+                }
+                if (!found) cancelled = true;
             }
-
-            Vector3Int cell;
-            bool validMouse = TryGetMouseCell(out cell) && !PointerOverUI();
-            if (dragBase == null && validMouse && Mouse.current.leftButton.wasPressedThisFrame)
+            else if (Mouse.current != null)
             {
-                bool branch = keyboard != null && (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed);
-                BeginNodeDrag(cell, branch);
+                position = Mouse.current.position.ReadValue();
+                held = Mouse.current.leftButton.isPressed;
+                released = Mouse.current.leftButton.wasReleasedThisFrame;
+                if (!held && !released) cancelled = true;
             }
+            else cancelled = true;
 
-            if (dragBase != null)
+            Vector3Int cell = Vector3Int.zero;
+            bool valid = !PointerOverUI(position) && TryGetCell(position, out cell);
+            if (!valid) cell = Vector3Int.zero;
+            if (pressed && valid)
             {
-                bool flip = keyboard != null && keyboard.rKey.wasPressedThisFrame;
-                if (flip && !movingNode)
-                    horizontalFirst = !horizontalFirst;
-                if (validMouse && (cell != dragCell || flip || dragPreview == null))
+                tracking = true;
+                startPosition = position;
+                startCell = cell;
+                startTime = Time.unscaledTime;
+                gestureStarted = false;
+            }
+            if (tracking && !deleteNodeMode && !gestureStarted && held)
+            {
+                bool existing = nodePaths.NodeAt(startCell) != null || ConnectionAt(nodePaths, startCell) != null;
+                if (existing && Vector2.Distance(position, startPosition) < nodeDragThreshold &&
+                    Time.unscaledTime - startTime >= nodeMoveHoldSeconds)
+                {
+                    gestureStarted = true;
+                    BeginNodeDrag(startCell, false);
+                    SetPathMessage("Drag to move this node, then release.");
+                }
+                else if (Vector2.Distance(position, startPosition) >= nodeDragThreshold)
+                {
+                    gestureStarted = true;
+                    BeginNodeDrag(startCell, true);
+                }
+            }
+            if (tracking && gestureStarted && !cancelled)
+            {
+                if (valid && (cell != dragCell || dragPreview == null || !previewValid))
                     PreviewNodeDrag(cell);
-                else if (!validMouse && previewValid)
+                else if (!valid && previewValid)
                 {
                     previewValid = false;
                     previewMessage = "Release inside the map, away from UI.";
                     DrawNodePaths(dragPreview ?? dragBase, false);
                 }
-                // revalidate when the pointer returns to the same cell from UI/outside
-                if (validMouse && !previewValid && previewMessage == "Release inside the map, away from UI.")
-                    PreviewNodeDrag(cell);
-
-                if (Mouse.current.leftButton.wasReleasedThisFrame)
-                {
-                    if (validMouse && previewValid && previewChanged)
-                        CommitNodeGraph(dragPreview);
-                    else if (previewChanged)
-                        SetPathMessage(previewMessage);
-                    CancelNodeDrag();
-                }
             }
-            else if (validMouse && keyboard != null)
+            if (tracking && (released || cancelled))
             {
-                if (keyboard.deleteKey.wasPressedThisFrame || keyboard.backspaceKey.wasPressedThisFrame)
-                    DeleteNodePathAt(cell);
-                else if (keyboard.rKey.wasPressedThisFrame)
-                    FlipNodePathAt(cell);
+                if (!cancelled && valid)
+                {
+                    if (deleteNodeMode && Vector2.Distance(position, startPosition) < nodeDragThreshold)
+                        DeleteNodePathAt(cell);
+                    else if (gestureStarted && previewValid && previewChanged)
+                        CommitNodeGraph(dragPreview);
+                    else if (!gestureStarted && cell == startCell && nodePaths.NodeAt(cell) == null && Vector2.Distance(position, startPosition) < nodeDragThreshold)
+                        FlipNodePathAt(cell);
+                }
+                if (gestureStarted && !previewValid && !cancelled)
+                    SetPathMessage(previewMessage);
+                CancelNodeDrag();
+                tracking = false;
             }
             yield return null;
         }
@@ -145,7 +229,7 @@ public partial class LevelC : MonoBehaviour
         if (!previewValid)
             SetPathMessage(previewMessage);
         else if (previewChanged)
-            SetPathMessage("Release to apply this path. Right-click or Escape cancels.");
+            SetPathMessage("Release to apply. Move outside the map to cancel.");
     }
 
     private NodePathNode GetOrMakeNode(NodePathGraph graph, Vector3Int cell)
@@ -210,6 +294,7 @@ public partial class LevelC : MonoBehaviour
     private bool CommitNodeGraph(NodePathGraph candidate)
     {
         string message;
+        candidate.NormalizeNodes();
         if (!candidate.Validate(sizeM, heightSize, false, out message))
         {
             SetPathMessage(message);
@@ -403,7 +488,7 @@ public partial class LevelC : MonoBehaviour
     private void OnApplicationFocus(bool hasFocus)
     {
         if (!hasFocus)
-            CancelNodeDrag();
+            StopPlacement();
     }
 
     private void OnDisable()

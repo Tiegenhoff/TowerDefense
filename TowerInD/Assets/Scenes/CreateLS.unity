@@ -1945,8 +1945,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1032272647}
         m_TargetAssemblyTypeName: LevelC, Assembly-CSharp
-        m_MethodName: SelectTile
-        m_Mode: 3
+        m_MethodName: ToggleDeleteNodeMode
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4374,6 +4374,8 @@ MonoBehaviour:
   horizontalFirst: 1
   pathStatusText: {fileID: 0}
   pathMessage: 
+  nodeMoveHoldSeconds: 0.45
+  nodeDragThreshold: 15
   nodeLineMaterial: {fileID: 0}
   pathLineColor: {r: 0, g: 1, b: 1, a: 1}
   nodeColor: {r: 0, g: 1, b: 1, a: 1}
