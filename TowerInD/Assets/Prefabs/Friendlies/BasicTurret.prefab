@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6840673958172543468}
   - component: {fileID: 1489533168201982970}
   m_Layer: 0
-  m_Name: Turret
+  m_Name: BasicTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,6 +113,6 @@ MonoBehaviour:
   AimAtPlr: 1
   repeatShot: 0
   repeatShotDelay: 0
-  delay: 3
-  velocity: 20
+  delay: 1
+  velocity: 10
   player: {fileID: 0}
