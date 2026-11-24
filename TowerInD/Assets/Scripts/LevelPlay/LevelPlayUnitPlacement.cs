@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using NUnit.Framework.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ public partial class LevelPlay : MonoBehaviour
 {
     //public int numberTurrets;
     [Header("TempSetupTurret")]
-    public GameObject turretPrefab;
+    private GameObject turretPrefab;
 
     private Vector3 turretSpawnPos;
     private bool placingTurrets = false;
@@ -16,7 +17,7 @@ public partial class LevelPlay : MonoBehaviour
     // for checking if a turret is already there
     private bool[,] unitPlacement;
 
-    public void StartPlaceTurrets()
+    public void StartPlaceTurrets(GameObject turretPrefab)
     {
         // check for fist time setup
         if (unitPlacement == null)
@@ -37,12 +38,12 @@ public partial class LevelPlay : MonoBehaviour
         {
             placingTurrets = true;
             Debug.Log($"Starting PlaceTurrets");
-            StartCoroutine(PlaceTurrets());
+            StartCoroutine(PlaceTurrets(turretPrefab));
         }
         
     }
 
-    private IEnumerator PlaceTurrets()
+    private IEnumerator PlaceTurrets(GameObject turretPrefab)
     {
         while (placingTurrets)
         {
