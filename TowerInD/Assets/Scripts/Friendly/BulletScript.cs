@@ -1,8 +1,7 @@
 // Author: Brandon Birman
-// Current Revision Date: 10/26/2026
+// Current Revision Date: 11/24/2026
 // Purpose: Track enemy targets within a circle of the turret and fire a projectile at them
 // References: Most of this code was created by Austin for a similiar purpose
-
 
 using System.Collections;
 using UnityEngine;
@@ -72,9 +71,11 @@ public class BulletScript : MonoBehaviour
                     Vector3 angleSet = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad), 0f);
 
                     GameObject bullet = Instantiate(bulletPrefab, (transform.position + angleSet), Quaternion.identity, transform);
-                    
-                    Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-                    rb.AddForce(angleSet * velocity, ForceMode2D.Impulse);
+
+                    if (bullet.TryGetComponent<Rigidbody2D>(out Rigidbody2D rd)) {
+                        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+                        rb.AddForce(angleSet * velocity, ForceMode2D.Impulse);
+                    }
 
                     angle += (radius / bulletCount)/2;
                 }
