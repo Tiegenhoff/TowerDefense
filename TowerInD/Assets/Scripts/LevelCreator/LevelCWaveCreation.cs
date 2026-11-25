@@ -25,6 +25,12 @@ public partial class LevelC : MonoBehaviour
 
     private GameObject selectedEnemy;   // selected enemy to add
     private Image selectedImage;
+    private Color selectedColor;
+
+    [Header("EnemySelection")]
+    public Image enemySelectionImage;
+    public TextMeshProUGUI enemyName;
+    public TextMeshProUGUI enemyStats;
 
     [Header("ButtonTopUI")]
     public GameObject savePrefab;
@@ -59,7 +65,17 @@ public partial class LevelC : MonoBehaviour
     public void SelectEnemy(GameObject button)
     {
         selectedEnemy = button.GetComponent<EnemyButton>().enemyPrefab;
-        selectedImage = button.GetComponent<Image>();
+        selectedImage = button.GetComponent<Image>(); // this needs to be fixed btw
+        selectedColor = button.transform.GetChild(0).GetComponent<Image>().color;
+
+        // set selected
+        enemySelectionImage.gameObject.SetActive(true);
+        enemySelectionImage.sprite = selectedImage.sprite;
+        enemySelectionImage.color = selectedColor;
+        enemyName.text = "Selected Enemy: " + selectedEnemy.name;
+        enemyStats.text = "Health: " + selectedEnemy.GetComponent<EnemyModifiers>().enemyHealth + "\nWeaknesses: " 
+            + string.Join(", ", selectedEnemy.GetComponent<EnemyModifiers>().enemyWeaknesses) + "\nStrengths: " 
+            + string.Join(", ", selectedEnemy.GetComponent<EnemyModifiers>().enemyStrengths);
     }
 
 
@@ -84,6 +100,7 @@ public partial class LevelC : MonoBehaviour
                 GameObject enemyIcon = Instantiate(waveEnemyPrefab, parent.transform);
 
                 enemyIcon.GetComponent<Image>().sprite = selectedImage.sprite;
+                enemyIcon.GetComponent<Image>().color = selectedColor;
                 enemyIcon.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = i.ToString();
             }
 
